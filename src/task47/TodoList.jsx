@@ -53,7 +53,7 @@ const TodoList = () => {
       <h1 style={{ textAlign: 'center' }}>Bài task 47 : wellcome building todo</h1>
 
       <Button type="primary" style={{ marginBottom: 16 }}>
-        <Link to="/todo/add">thêm todo</Link>
+        <Link to="/add">thêm todo</Link>
       </Button>
 
       <Table
@@ -97,7 +97,7 @@ const TodoList = () => {
             render: (_, record) => (
               <Space size="middle">
                 <Button danger onClick={() => handleDelete(record.id)}>xoa</Button>
-                <Link to={`/todo/edit/${record.id}`}>
+                <Link to={`/edit/${record.id}`}>
                   <Button>sua</Button>
                 </Link>
               </Space>

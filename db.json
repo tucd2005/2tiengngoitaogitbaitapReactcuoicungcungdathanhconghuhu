@@ -9,13 +9,6 @@
       "description": "Description for Todo 3"
     },
     {
-      "title": "123123",
-      "completed": "false",
-      "priority": "medium",
-      "description": "1321123213",
-      "id": 4
-    },
-    {
       "title": "2424324",
       "completed": "false",
       "priority": "medium",

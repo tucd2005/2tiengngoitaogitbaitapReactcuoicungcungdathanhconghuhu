@@ -14,9 +14,9 @@ function App() {
     <>
       <Routes>
           <Route path='/task46' element={<ProductsList/>}/>
-          <Route path='/todo' element={<TodoList/>}/>
-          <Route path='/todo/add' element={<TodoAdd/>}/>
-          <Route path='/todo/edit:id' element={<TodoEdit/>}/>
+          <Route path='/' element={<TodoList/>}/>
+          <Route path='/add' element={<TodoAdd/>}/>
+          <Route path='/edit:id' element={<TodoEdit/>}/>
 
         
       </Routes>
