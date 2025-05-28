@@ -1,89 +1,81 @@
-import axios from 'axios'
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+// Ví dụ: file AddTodo.jsx
 
-const TodoAdd = () => {
-    const {
-        reset,
-        handleSubmit,
-        formState: { errors },
-        register
-    } = useForm()
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'; // Dùng để chuyển hướng sau khi thêm
 
-    const nav = useNavigate();
-    const handleSubmitAdd = async (data) => {
-        try {
-            await axios.post(`http://localhost:3000/todo`, data)
-            toast.success("them san pham thanh cong")
-            reset()
-            nav("/todo")
-        } catch (error) {
-            console.log("loi ", error);
+const AddTodo = () => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('low'); // Mặc định là 'low'
+  const [completed, setCompleted] = useState(false); // Mặc định là false
+  const navigate = useNavigate();
 
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Ngăn chặn hành vi submit form mặc định
+
+    // --- ĐÂY LÀ ĐIỂM CHÍNH: GÁN createdAt TRƯỚC KHI GỬI ĐI ---
+    const newTodo = {
+      title,
+      description,
+      priority,
+      completed,
+      createdAt: new Date().toISOString() // Gán timestamp hiện tại theo định dạng ISO
+    };
+
+    try {
+      const res = await axios.post('http://localhost:3000/todo', newTodo);
+      console.log('Todo đã được thêm:', res.data);
+      toast.success("Thêm Todo thành công!");
+      navigate('/'); // Chuyển hướng về trang danh sách Todo
+    } catch (error) {
+      console.error('Lỗi khi thêm Todo:', error);
+      toast.error("Thêm Todo thất bại!");
     }
-    return (
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h1 style={{ textAlign: 'center' }}>Thêm Todo Mới</h1>
+      <form onSubmit={handleSubmit}>
         <div>
-            <h1>TodoAdd </h1>
-            <Link to={"/todo"}>quay lai</Link>
-            <form action="" onSubmit={handleSubmit(handleSubmitAdd)}>
-                <div>
-
-                    <label htmlFor="">title</label>
-                    <input type="text" placeholder='title ...'
-                        {...register("title", { required: true, minLength: 5 })} />
-                    {errors?.title?.type === "required" && <span>bat buoc nhap</span>}
-                    {errors?.title?.type === "minLength" && <span>Bat buoc phai tren 5 ki tu</span>}
-                </div>
-                <br />
-
-                <div>
-
-                    <label htmlFor="">completed</label>
-                    <div>
-                        <input type="radio" placeholder='completed ... ' id={'1'} value="true" defaultChecked {...register("completed")}></input>
-                        <label htmlFor='1'>Hoan thanh</label>
-                    </div>
-                    <div>
-
-                        <input type="radio" placeholder='completed ... ' id={'2'} value="false" {...register("completed")} ></input> 
-                        <label htmlFor='2'>chua Hoan thanh</label>
-                    </div>
-
-                    <br />
-                </div>
-
-
-
-                <div>
-
-                    <label htmlFor="">priority</label>
-                    {/* <input type="text" placeholder='priority ... '
-             {...register ("priority", {required: true})} /> {errors?.priority?.type === "required" && <span>bat buoc nhap</span>} */}
-                    <select name="priority" id="priority"
-                        {...register("priority", { required: true })}>
-                        <option value="high">high</option>
-                        <option value="medium">medium</option>
-                        <option value="low">low</option>
-
-                    </select>
-                    {errors?.priority?.type === "required" && <span> bat buoc chon</span>}
-                    <br />
-                </div>
-
-                <div>
-
-                    <label htmlFor="">description</label>
-                    <input type="text" placeholder='description ... '
-                        {...register("description", { required: true })} /> {errors?.description?.type === "required" && <span>bat buoc nhap</span>}<br />
-                </div>
-                <button type='submit'>them san pham</button>
-            </form>
+          <label>Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
         </div>
-    )
-}
+        <div>
+          <label>Description:</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div>
+        <div>
+          <label>Priority:</label>
+          <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        {/* Có thể thêm checkbox cho completed nếu muốn */}
+        {/* <div>
+          <label>Completed:</label>
+          <input
+            type="checkbox"
+            checked={completed}
+            onChange={(e) => setCompleted(e.target.checked)}
+          />
+        </div> */}
+        <button type="submit">Thêm Todo</button>
+      </form>
+    </div>
+  );
+};
 
-
-export default TodoAdd
+export default AddTodo;
